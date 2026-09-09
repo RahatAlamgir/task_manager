@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/screens/login_signup/login_screens.dart';
+import 'package:task_manager/utils/assets_path.dart';
 import 'package:task_manager/widget/screen_bg.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,8 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenBg(
-      logo: Image.asset("assets/logo.png", width: 300, height: 300),
-    );
+    return ScreenBg(logo: Image.asset(AssetPath.logo, width: 300, height: 300));
   }
 }

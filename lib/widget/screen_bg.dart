@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/utils/assets_path.dart';
 
 class ScreenBg extends StatelessWidget {
   const ScreenBg({super.key, this.logo, this.child});
@@ -13,7 +14,7 @@ class ScreenBg extends StatelessWidget {
           Image.asset(
             width: double.infinity,
             height: double.infinity,
-            "assets/background.png",
+            AssetPath.background,
             fit: .fill,
           ),
           Center(child: logo),

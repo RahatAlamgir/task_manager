@@ -15,6 +15,11 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.teal),
         scaffoldBackgroundColor: Color.fromARGB(255, 231, 240, 241),
 
+        appBarTheme: AppBarThemeData(
+          backgroundColor: Color.fromARGB(255, 231, 240, 241),
+          elevation: 0,
+        ),
+
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Colors.white,
           filled: true,

@@ -1,4 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/screens/login_signup/signup_screens.dart';
+import 'package:task_manager/screens/navigations/main_navigation_screen.dart';
 import 'package:task_manager/widget/screen_bg.dart';
 
 class LoginScreens extends StatefulWidget {
@@ -12,6 +15,27 @@ class _LoginScreensState extends State<LoginScreens> {
   double linegap = 15;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  void onTapSignUp() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignupScreens()),
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +65,14 @@ class _LoginScreensState extends State<LoginScreens> {
             ),
             SizedBox(height: linegap),
             FilledButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainNavigationScreen(),
+                  ),
+                );
+              },
               child: Icon(Icons.arrow_circle_right_outlined, size: 22),
             ),
             SizedBox(height: linegap),
@@ -67,6 +98,8 @@ class _LoginScreensState extends State<LoginScreens> {
                             fontSize: 14,
                             fontWeight: .bold,
                           ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = onTapSignUp,
                         ),
                       ],
                     ),
