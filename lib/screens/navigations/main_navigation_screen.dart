@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/controller/auth_controller.dart';
 import 'package:task_manager/screens/login_signup/login_screens.dart';
 import 'package:task_manager/screens/navigations/completed.dart';
 import 'package:task_manager/screens/navigations/home.dart';
@@ -35,6 +36,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
+  void logout() {
+    AuthController.clearData();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreens()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +64,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               crossAxisAlignment: .start,
               children: [
                 Text(
-                  "Rahat Alamgir",
+                  "${AuthController.userData!.firstName} ${AuthController.userData!.lastName}",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.teal,
@@ -63,24 +72,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   ),
                 ),
                 Text(
-                  "rahatalamgir@gmail.com",
+                  AuthController.userData!.email.toString(),
                   style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
               ],
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreens()),
-              );
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
+        actions: [IconButton(onPressed: logout, icon: Icon(Icons.logout))],
       ),
 
       body: screens[_selectedIndex],

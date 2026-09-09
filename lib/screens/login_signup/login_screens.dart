@@ -1,7 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/controller/auth_controller.dart';
+import 'package:task_manager/model/api_response.dart';
+import 'package:task_manager/model/user_model.dart';
 import 'package:task_manager/screens/login_signup/signup_screens.dart';
 import 'package:task_manager/screens/navigations/main_navigation_screen.dart';
+import 'package:task_manager/services/api_caller.dart';
+import 'package:task_manager/utils/urls.dart';
 import 'package:task_manager/widget/screen_bg.dart';
 
 class LoginScreens extends StatefulWidget {
@@ -16,11 +21,32 @@ class _LoginScreensState extends State<LoginScreens> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void onTapSignUp() {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  void onTapSignUpScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SignupScreens()),
     );
+  }
+
+  void onTapLogin() async {
+    ApiResponse response = await ApiCaller.postRequest(
+      url: Urls.loginURL,
+      body: {
+        "email": emailController.text,
+        "password": passwordController.text,
+      },
+    );
+    if (response.isSuccess) {
+      UserModel model = UserModel.fromJson(response.responseData['data']);
+      String token = response.responseData['token'];
+      AuthController.saveUserData(model, token);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+      );
+    }
   }
 
   @override
@@ -42,72 +68,73 @@ class _LoginScreensState extends State<LoginScreens> {
     return ScreenBg(
       child: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            SizedBox(height: 150),
-            Text(
-              "Get Started With",
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
-            ),
-            SizedBox(height: linegap),
-            TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(hintText: 'Email'),
-            ),
-            SizedBox(height: linegap),
-            TextFormField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(hintText: 'Password'),
-            ),
-            SizedBox(height: linegap),
-            FilledButton(
-              onPressed: () {
-                Navigator.pushReplacement(
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              SizedBox(height: 150),
+              Text(
+                "Get Started With",
+                style: Theme.of(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => MainNavigationScreen(),
-                  ),
-                );
-              },
-              child: Icon(Icons.arrow_circle_right_outlined, size: 22),
-            ),
-            SizedBox(height: linegap),
-            Center(
-              child: Column(
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Forget password..?",
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: 'Dont have a account? ',
-                      style: TextStyle(color: Colors.black, fontSize: 14),
-                      children: [
-                        TextSpan(
-                          text: 'Sign up',
-                          style: TextStyle(
-                            color: Colors.teal,
-                            fontSize: 14,
-                            fontWeight: .bold,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = onTapSignUp,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
               ),
-            ),
-          ],
+              SizedBox(height: linegap),
+              TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(hintText: 'Email'),
+                validator: (value) {
+                  return null;
+                },
+              ),
+              SizedBox(height: linegap),
+              TextFormField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(hintText: 'Password'),
+              ),
+              SizedBox(height: linegap),
+              FilledButton(
+                onPressed: () {
+                  onTapLogin();
+                },
+                child: Icon(Icons.arrow_circle_right_outlined, size: 22),
+              ),
+              SizedBox(height: linegap),
+              Center(
+                child: Column(
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Forget password..?",
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Dont have a account? ',
+                        style: TextStyle(color: Colors.black, fontSize: 14),
+                        children: [
+                          TextSpan(
+                            text: 'Sign up',
+                            style: TextStyle(
+                              color: Colors.teal,
+                              fontSize: 14,
+                              fontWeight: .bold,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = onTapSignUpScreen,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

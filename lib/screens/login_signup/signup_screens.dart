@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/model/api_response.dart';
+import 'package:task_manager/services/api_caller.dart';
+import 'package:task_manager/utils/urls.dart';
 import 'package:task_manager/widget/screen_bg.dart';
 
 class SignupScreens extends StatefulWidget {
@@ -18,7 +21,23 @@ class _SignupScreensState extends State<SignupScreens> {
 
   TextEditingController passwordController = TextEditingController();
 
-  void onTapSignUp() {
+  void onTapSignUp() async {
+    final ApiResponse response = await ApiCaller.postRequest(
+      url: Urls.signUpURL,
+      body: {
+        "email": emailController.text,
+        "firstName": firstNameController.text,
+        "lastName": lastNameController.text,
+        "mobile": mobileController.text,
+        "password": passwordController.text,
+      },
+    );
+    if (response.isSuccess) {
+      backToLoginScreen();
+    }
+  }
+
+  void backToLoginScreen() {
     Navigator.pop(context);
   }
 
@@ -61,17 +80,17 @@ class _SignupScreensState extends State<SignupScreens> {
             ),
             SizedBox(height: linegap),
             TextFormField(
-              controller: emailController,
+              controller: firstNameController,
               decoration: InputDecoration(hintText: 'First Name'),
             ),
             SizedBox(height: linegap),
             TextFormField(
-              controller: emailController,
+              controller: lastNameController,
               decoration: InputDecoration(hintText: 'Last Name'),
             ),
             SizedBox(height: linegap),
             TextFormField(
-              controller: emailController,
+              controller: mobileController,
               decoration: InputDecoration(hintText: 'Mobile'),
             ),
             SizedBox(height: linegap),
@@ -82,7 +101,7 @@ class _SignupScreensState extends State<SignupScreens> {
             ),
             SizedBox(height: linegap),
             FilledButton(
-              onPressed: () {},
+              onPressed: onTapSignUp,
               child: Icon(Icons.arrow_circle_right_outlined, size: 22),
             ),
             SizedBox(height: linegap),
@@ -102,7 +121,7 @@ class _SignupScreensState extends State<SignupScreens> {
                             fontWeight: .bold,
                           ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = onTapSignUp,
+                            ..onTap = backToLoginScreen,
                         ),
                       ],
                     ),
