@@ -57,7 +57,7 @@ class _CompletedScreenState extends State<CompletedScreen> {
               ),
             ),
             SizedBox(
-              height: 400,
+              height: 530,
               child: ListView.builder(
                 itemCount: completedTaskList.length,
                 itemBuilder: ((context, index) {

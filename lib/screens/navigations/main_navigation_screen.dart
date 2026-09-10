@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/controller/auth_controller.dart';
+import 'package:task_manager/screens/add_update/add_new_task.dart';
 import 'package:task_manager/screens/login_signup/login_screens.dart';
 import 'package:task_manager/screens/navigations/completed.dart';
 import 'package:task_manager/screens/navigations/home.dart';
 import 'package:task_manager/screens/navigations/new_task.dart';
 import 'package:task_manager/screens/navigations/progress.dart';
+import 'package:task_manager/widget/task_app_bar.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -47,45 +49,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.tealAccent,
-                foregroundImage: NetworkImage(
-                  "https://img.magnific.com/premium-vector/wavy-hair-caucasian-man-relaxed-standing-2d-vector-avatar-illustration-cheerful-western-european-male-cartoon-character-face-confident-headshot-posing-flat-color-user-profile-image-isolated-white_151150-21132.jpg?semt=ais_hybrid&w=740&q=80",
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  "${AuthController.userData!.firstName} ${AuthController.userData!.lastName}",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.teal,
-                    fontWeight: .bold,
-                  ),
-                ),
-                Text(
-                  AuthController.userData!.email.toString(),
-                  style: TextStyle(fontSize: 12, color: Colors.black54),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [IconButton(onPressed: logout, icon: Icon(Icons.logout))],
-      ),
+      appBar: TaskAppBar(logoutButton: logout),
 
       body: screens[_selectedIndex],
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AddNewTask()),
+          );
+        },
         backgroundColor: Colors.teal,
         shape: const CircleBorder(),
         elevation: 2.0,
@@ -97,13 +71,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         elevation: 4,
         height: 65,
         color: Colors.white,
-        shape: const CircularNotchedRectangle(), // Creates the cutout curve
-        notchMargin: 8.0, // Space between the FAB and the bar
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
         clipBehavior: Clip.antiAlias,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            // Tab 0: Home
             navigationItem(Icons.home, 0),
             navigationItem(Icons.assignment, 1),
             const SizedBox(width: 48),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/controller/task_controller.dart';
-import 'package:task_manager/model/task_model.dart';
 import 'package:task_manager/widget/task_card.dart';
 import 'package:task_manager/widget/task_count_card.dart';
 
@@ -12,11 +11,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool haveTask = false;
   Future fatchTaskData() async {
     await TaskController.getTaskStatusCount();
     await TaskController.getAllTaskList();
 
     if (mounted) {
+      haveTask = TaskController.taskStatusCount.length > 0;
       setState(() {});
     }
   }
@@ -37,21 +38,25 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: .start,
           children: [
             SizedBox(
-              height: 100,
-              child: ListView.separated(
-                scrollDirection: .horizontal,
-                itemCount: TaskController.taskStatusCount.length,
+              height: haveTask ? 100 : 0,
+              child: !haveTask
+                  ? null
+                  : ListView.separated(
+                      scrollDirection: .horizontal,
+                      itemCount: TaskController.taskStatusCount.length,
 
-                itemBuilder: (context, index) {
-                  return TaskCountCard(
-                    title: TaskController.taskStatusCount[index].sId.toString(),
-                    count: TaskController.taskStatusCount[index].sum!.toInt(),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(width: 8);
-                },
-              ),
+                      itemBuilder: (context, index) {
+                        return TaskCountCard(
+                          title: TaskController.taskStatusCount[index].sId
+                              .toString(),
+                          count: TaskController.taskStatusCount[index].sum!
+                              .toInt(),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(width: 8);
+                      },
+                    ),
             ),
             SizedBox(height: 5),
 
@@ -85,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(
-              height: 400,
+              height: !haveTask ? 500 : 400,
               child: ListView.builder(
                 itemCount: TaskController.allTaskList.length,
                 itemBuilder: ((context, index) {

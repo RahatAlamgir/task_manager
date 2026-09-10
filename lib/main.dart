@@ -20,6 +20,8 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
 
+        cardTheme: CardThemeData(color: Colors.white, elevation: 0),
+
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Colors.white,
           filled: true,

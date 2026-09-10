@@ -54,7 +54,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               child: Text("All New Tasks", style: TextStyle(fontWeight: .w600)),
             ),
             SizedBox(
-              height: 400,
+              height: 530,
               child: ListView.builder(
                 itemCount: newTaskList.length,
                 itemBuilder: ((context, index) {

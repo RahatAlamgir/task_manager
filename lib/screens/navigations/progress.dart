@@ -57,7 +57,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
             ),
             SizedBox(
-              height: 400,
+              height: 530,
               child: ListView.builder(
                 itemCount: progressTaskList.length,
                 itemBuilder: ((context, index) {
