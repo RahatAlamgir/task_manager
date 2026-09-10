@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/controller/task_controller.dart';
+import 'package:task_manager/model/task_model.dart';
 import 'package:task_manager/widget/task_card.dart';
 import 'package:task_manager/widget/task_count_card.dart';
 
@@ -10,6 +12,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future fatchTaskData() async {
+    await TaskController.getTaskStatusCount();
+    await TaskController.getAllTaskList();
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fatchTaskData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -22,10 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 100,
               child: ListView.separated(
                 scrollDirection: .horizontal,
-                itemCount: 4,
+                itemCount: TaskController.taskStatusCount.length,
 
                 itemBuilder: (context, index) {
-                  return TaskCountCard(title: "Completed", count: 25);
+                  return TaskCountCard(
+                    title: TaskController.taskStatusCount[index].sId.toString(),
+                    count: TaskController.taskStatusCount[index].sum!.toInt(),
+                  );
                 },
                 separatorBuilder: (context, index) {
                   return SizedBox(width: 8);
@@ -66,9 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 400,
               child: ListView.builder(
-                itemCount: 6,
+                itemCount: TaskController.allTaskList.length,
                 itemBuilder: ((context, index) {
-                  return TaskCard();
+                  return TaskCard(
+                    task: TaskController.allTaskList[index],
+                    refreshParant: fatchTaskData,
+                  );
                 }),
               ),
             ),
