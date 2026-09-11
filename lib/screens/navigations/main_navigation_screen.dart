@@ -6,6 +6,7 @@ import 'package:task_manager/screens/navigations/completed.dart';
 import 'package:task_manager/screens/navigations/home.dart';
 import 'package:task_manager/screens/navigations/new_task.dart';
 import 'package:task_manager/screens/navigations/progress.dart';
+import 'package:task_manager/widget/app_bar_drawer.dart';
 import 'package:task_manager/widget/task_app_bar.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -38,18 +39,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
-  void logout() {
-    AuthController.clearData();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreens()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TaskAppBar(logoutButton: logout),
+      appBar: TaskAppBar(),
+      endDrawer: AppDrawer(
+        onLogout: () {
+          //logoutDialog(context);
+        },
+      ),
 
       body: screens[_selectedIndex],
 

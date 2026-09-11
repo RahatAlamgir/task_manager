@@ -8,4 +8,9 @@ class Urls {
   static String deleteURL(String id) => '$baseURL/deleteTask/$id';
 
   static String addNewTaskURL = '$baseURL/createTask';
+
+  static String updateTaskStatusURL(String ID, String status) =>
+      '$baseURL/updateTaskStatus/$ID/$status';
+
+  static String ProfileUpdateURL = '$baseURL/ProfileUpdate';
 }

@@ -22,6 +22,10 @@ class MyApp extends StatelessWidget {
 
         cardTheme: CardThemeData(color: Colors.white, elevation: 0),
 
+        drawerTheme: DrawerThemeData(
+          backgroundColor: Color.fromARGB(255, 231, 240, 241),
+        ),
+
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Colors.white,
           filled: true,

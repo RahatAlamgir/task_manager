@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/controller/auth_controller.dart';
 
 class TaskAppBar extends StatelessWidget implements PreferredSize {
-  const TaskAppBar({super.key, this.logoutButton, this.backButton});
+  const TaskAppBar({super.key, this.backButton});
 
-  final VoidCallback? logoutButton;
   final VoidCallback? backButton;
 
   @override
@@ -43,13 +42,10 @@ class TaskAppBar extends StatelessWidget implements PreferredSize {
           ),
         ],
       ),
+
       actions: [
-        logoutButton == null
-            ? SizedBox()
-            : IconButton(onPressed: logoutButton, icon: Icon(Icons.logout)),
-        backButton == null
-            ? SizedBox()
-            : IconButton(onPressed: backButton, icon: Icon(Icons.arrow_back)),
+        if (backButton != null)
+          IconButton(onPressed: backButton, icon: Icon(Icons.arrow_back)),
       ],
     );
   }
