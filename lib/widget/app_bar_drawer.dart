@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/controller/auth_controller.dart';
 import 'package:task_manager/screens/login_signup/login_screens.dart';
+import 'package:task_manager/screens/profile/change_password.dart';
 import 'package:task_manager/screens/profile/profile.dart';
+import 'package:task_manager/screens/profile/update_profile.dart';
 
-class AppDrawer extends StatelessWidget {
-  final VoidCallback onLogout;
+class AppDrawer extends StatefulWidget {
+  final VoidCallback? refreshParant;
 
-  const AppDrawer({super.key, required this.onLogout});
+  const AppDrawer({super.key, this.refreshParant});
 
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
   void logoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -91,15 +98,20 @@ class AppDrawer extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => ProfileScreen()),
                     );
-                    ProfileScreen();
                   },
                 ),
                 _DrawerTile(
                   icon: Icons.manage_accounts_outlined,
                   title: 'Update Profile',
-                  onTap: () {
+                  onTap: () async {
                     Navigator.pop(context);
-                    // Navigate to Update Profile
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            UpdateProfile(refreshParant: widget.refreshParant!),
+                      ),
+                    );
                   },
                 ),
                 _DrawerTile(
@@ -107,7 +119,10 @@ class AppDrawer extends StatelessWidget {
                   title: 'Change Password',
                   onTap: () {
                     Navigator.pop(context);
-                    // Navigate to Change Password
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChangePassword()),
+                    );
                   },
                 ),
                 _DrawerTile(

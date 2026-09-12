@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/controller/auth_controller.dart';
 
 class TaskAppBar extends StatelessWidget implements PreferredSize {
-  const TaskAppBar({super.key, this.backButton});
+  const TaskAppBar({super.key, this.backButton, this.back = false});
 
   final VoidCallback? backButton;
+  final bool back;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       title: Row(
         children: [
           Padding(
@@ -46,6 +48,14 @@ class TaskAppBar extends StatelessWidget implements PreferredSize {
       actions: [
         if (backButton != null)
           IconButton(onPressed: backButton, icon: Icon(Icons.arrow_back)),
+
+        if (back == true)
+          IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
       ],
     );
   }

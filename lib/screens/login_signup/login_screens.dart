@@ -5,6 +5,7 @@ import 'package:task_manager/model/api_response.dart';
 import 'package:task_manager/model/user_model.dart';
 import 'package:task_manager/screens/login_signup/signup_screens.dart';
 import 'package:task_manager/screens/navigations/main_navigation_screen.dart';
+import 'package:task_manager/screens/profile/forget_password.dart';
 import 'package:task_manager/services/api_caller.dart';
 import 'package:task_manager/utils/urls.dart';
 import 'package:task_manager/widget/screen_bg.dart';
@@ -84,6 +85,9 @@ class _LoginScreensState extends State<LoginScreens> {
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(hintText: 'Email'),
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
                 validator: (value) {
                   return null;
                 },
@@ -92,6 +96,9 @@ class _LoginScreensState extends State<LoginScreens> {
               TextFormField(
                 controller: passwordController,
                 obscureText: true,
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
                 decoration: InputDecoration(hintText: 'Password'),
               ),
               SizedBox(height: linegap),
@@ -106,7 +113,14 @@ class _LoginScreensState extends State<LoginScreens> {
                 child: Column(
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgetPassword(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "Forget password..?",
                         style: TextStyle(color: Colors.grey, fontSize: 14),

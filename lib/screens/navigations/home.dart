@@ -12,14 +12,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool haveTask = false;
+
+  TextEditingController searchController = TextEditingController();
+
   Future fatchTaskData() async {
     await TaskController.getTaskStatusCount();
     await TaskController.getAllTaskList();
 
     if (mounted) {
-      haveTask = TaskController.taskStatusCount.length > 0;
+      haveTask = TaskController.taskStatusCount.isNotEmpty;
       setState(() {});
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    searchController.dispose();
   }
 
   @override
@@ -63,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: TextFormField(
+                controller: searchController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(Icons.search, color: Colors.grey),

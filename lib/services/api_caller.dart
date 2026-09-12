@@ -11,7 +11,7 @@ class ApiCaller {
       headers: {'token': AuthController.userToken ?? ''},
     );
 
-    print("Url === ${url}");
+    print("Url === $url");
     print("Url === ${response.body}");
 
     if (response.statusCode == 200) {
@@ -43,7 +43,7 @@ class ApiCaller {
       body: jsonEncode(body),
     );
 
-    print("Url === ${url}");
+    print("Url === $url");
     print("Url === ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {

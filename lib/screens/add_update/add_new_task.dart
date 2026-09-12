@@ -7,7 +7,7 @@ import 'package:task_manager/utils/urls.dart';
 import 'package:task_manager/widget/task_app_bar.dart';
 
 class AddNewTask extends StatefulWidget {
-  AddNewTask({super.key});
+  const AddNewTask({super.key});
 
   @override
   State<AddNewTask> createState() => _AddNewTaskState();

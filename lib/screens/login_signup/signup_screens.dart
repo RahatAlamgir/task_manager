@@ -77,27 +77,32 @@ class _SignupScreensState extends State<SignupScreens> {
             TextFormField(
               controller: emailController,
               decoration: InputDecoration(hintText: 'Email'),
+              onTapOutside: (event) => FocusScope.of(context).unfocus(),
             ),
             SizedBox(height: linegap),
             TextFormField(
               controller: firstNameController,
               decoration: InputDecoration(hintText: 'First Name'),
+              onTapOutside: (event) => FocusScope.of(context).unfocus(),
             ),
             SizedBox(height: linegap),
             TextFormField(
               controller: lastNameController,
               decoration: InputDecoration(hintText: 'Last Name'),
+              onTapOutside: (event) => FocusScope.of(context).unfocus(),
             ),
             SizedBox(height: linegap),
             TextFormField(
               controller: mobileController,
               decoration: InputDecoration(hintText: 'Mobile'),
+              onTapOutside: (event) => FocusScope.of(context).unfocus(),
             ),
             SizedBox(height: linegap),
             TextFormField(
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(hintText: 'Password'),
+              onTapOutside: (event) => FocusScope.of(context).unfocus(),
             ),
             SizedBox(height: linegap),
             FilledButton(

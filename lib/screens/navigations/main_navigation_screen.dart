@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/controller/auth_controller.dart';
 import 'package:task_manager/screens/add_update/add_new_task.dart';
-import 'package:task_manager/screens/login_signup/login_screens.dart';
 import 'package:task_manager/screens/navigations/completed.dart';
 import 'package:task_manager/screens/navigations/home.dart';
 import 'package:task_manager/screens/navigations/new_task.dart';
@@ -39,15 +37,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
+  void refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: TaskAppBar(),
-      endDrawer: AppDrawer(
-        onLogout: () {
-          //logoutDialog(context);
-        },
-      ),
+      endDrawer: AppDrawer(refreshParant: refresh),
 
       body: screens[_selectedIndex],
 

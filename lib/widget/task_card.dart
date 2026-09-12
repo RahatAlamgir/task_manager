@@ -23,12 +23,27 @@ class TaskCard extends StatelessWidget {
     }
   }
 
-  Future deleteTask() async {
+  Future deleteTask(BuildContext context) async {
     ApiResponse response = await ApiCaller.getRequest(
       url: Urls.deleteURL(task.sId.toString()),
     );
+
     if (response.isSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Task Deleted Successful"),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+
       refreshParant();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Task Deleted Failed"),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
@@ -43,7 +58,7 @@ class TaskCard extends StatelessWidget {
     return newStatus;
   }
 
-  Future changeStatusTask() async {
+  Future changeStatusTask(BuildContext context) async {
     String newStatus = getChangeStatus();
 
     if (newStatus.length > 1) {
@@ -51,7 +66,20 @@ class TaskCard extends StatelessWidget {
         url: Urls.updateTaskStatusURL(task.sId.toString(), newStatus),
       );
       if (response.isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Task Status Changed to $newStatus"),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         refreshParant();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Task Status Change Failed"),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     }
   }
@@ -59,7 +87,7 @@ class TaskCard extends StatelessWidget {
   void updateStatusDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: Text(task.title.toString()),
           content: Column(
@@ -73,15 +101,15 @@ class TaskCard extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text("Cancel"),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
               onPressed: () async {
-                Navigator.pop(context);
-                await changeStatusTask();
+                Navigator.pop(dialogContext);
+                await changeStatusTask(context);
               },
               child: Text(
                 getChangeStatus(),
@@ -97,7 +125,7 @@ class TaskCard extends StatelessWidget {
   void deleteDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: Text("Delete Task"),
           content: Column(
@@ -111,15 +139,15 @@ class TaskCard extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text("Cancel"),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () async {
-                Navigator.pop(context);
-                await deleteTask();
+                Navigator.pop(dialogContext);
+                await deleteTask(context);
               },
               child: const Text(
                 "Delete",
