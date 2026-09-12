@@ -14,26 +14,26 @@ class SignupScreens extends StatefulWidget {
 }
 
 class _SignupScreensState extends State<SignupScreens> {
-  double linegap = 15;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
+  final double _linegap = 15;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
 
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isobscureText = true;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isobscureText = true;
 
   void onTapSignUp() async {
     final ApiResponse response = await ApiCaller.postRequest(
       url: Urls.signUpURL,
       body: {
-        "email": emailController.text,
-        "firstName": firstNameController.text,
-        "lastName": lastNameController.text,
-        "mobile": mobileController.text,
-        "password": passwordController.text,
+        "email": _emailController.text,
+        "firstName": _firstNameController.text,
+        "lastName": _lastNameController.text,
+        "mobile": _mobileController.text,
+        "password": _passwordController.text,
       },
     );
     if (response.isSuccess) {
@@ -59,11 +59,11 @@ class _SignupScreensState extends State<SignupScreens> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    emailController.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
-    mobileController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _mobileController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -84,9 +84,9 @@ class _SignupScreensState extends State<SignupScreens> {
                   context,
                 ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: emailController,
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText: 'Email',
                   prefixIcon: prefixTextFieldIcon(
@@ -106,9 +106,9 @@ class _SignupScreensState extends State<SignupScreens> {
                 },
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: firstNameController,
+                controller: _firstNameController,
                 decoration: InputDecoration(
                   hintText: 'First Name',
                   prefixIcon: prefixTextFieldIcon(
@@ -124,9 +124,9 @@ class _SignupScreensState extends State<SignupScreens> {
                 },
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: lastNameController,
+                controller: _lastNameController,
                 decoration: InputDecoration(
                   hintText: 'Last Name',
                   prefixIcon: prefixTextFieldIcon(
@@ -142,9 +142,9 @@ class _SignupScreensState extends State<SignupScreens> {
                 },
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: mobileController,
+                controller: _mobileController,
                 decoration: InputDecoration(
                   hintText: 'Mobile',
                   prefixIcon: prefixTextFieldIcon(
@@ -168,20 +168,20 @@ class _SignupScreensState extends State<SignupScreens> {
                 },
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: passwordController,
-                obscureText: isobscureText,
+                controller: _passwordController,
+                obscureText: _isobscureText,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   prefixIcon: prefixTextFieldIcon(iconData: Icons.key_outlined),
                   suffixIcon: IconButton(
                     onPressed: () {
-                      isobscureText = !isobscureText;
+                      _isobscureText = !_isobscureText;
                       setState(() {});
                     },
                     icon: Icon(
-                      isobscureText
+                      _isobscureText
                           ? Icons.visibility_off
                           : Icons.remove_red_eye,
                       color: Colors.grey,
@@ -199,7 +199,7 @@ class _SignupScreensState extends State<SignupScreens> {
                 },
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               FilledButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -208,7 +208,7 @@ class _SignupScreensState extends State<SignupScreens> {
                 },
                 child: Icon(Icons.arrow_circle_right_outlined, size: 22),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               Center(
                 child: Column(
                   children: [

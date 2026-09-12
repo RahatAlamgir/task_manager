@@ -19,11 +19,11 @@ class LoginScreens extends StatefulWidget {
 }
 
 class _LoginScreensState extends State<LoginScreens> {
-  double linegap = 15;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final double _linegap = 15;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isobscureText = true;
 
   void onTapSignUpScreen() {
@@ -37,8 +37,8 @@ class _LoginScreensState extends State<LoginScreens> {
     ApiResponse response = await ApiCaller.postRequest(
       url: Urls.loginURL,
       body: {
-        "email": emailController.text,
-        "password": passwordController.text,
+        "email": _emailController.text,
+        "password": _passwordController.text,
       },
     );
     print("my response  ${response.isSuccess}");
@@ -51,7 +51,7 @@ class _LoginScreensState extends State<LoginScreens> {
         MaterialPageRoute(builder: (context) => MainNavigationScreen()),
       );
     } else {
-      passwordController.clear();
+      _passwordController.clear();
 
       ScaffoldMessenger.of(
         context,
@@ -69,8 +69,8 @@ class _LoginScreensState extends State<LoginScreens> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -90,9 +90,9 @@ class _LoginScreensState extends State<LoginScreens> {
                   context,
                 ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: emailController,
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText: 'Email',
                   prefixIcon: prefixTextFieldIcon(
@@ -114,9 +114,9 @@ class _LoginScreensState extends State<LoginScreens> {
                   return null;
                 },
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               TextFormField(
-                controller: passwordController,
+                controller: _passwordController,
                 obscureText: isobscureText,
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
@@ -147,7 +147,7 @@ class _LoginScreensState extends State<LoginScreens> {
                   return null;
                 },
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               FilledButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -156,7 +156,7 @@ class _LoginScreensState extends State<LoginScreens> {
                 },
                 child: Icon(Icons.arrow_circle_right_outlined, size: 22),
               ),
-              SizedBox(height: linegap),
+              SizedBox(height: _linegap),
               Center(
                 child: Column(
                   children: [

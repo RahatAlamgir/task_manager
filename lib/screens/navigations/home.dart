@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/controller/task_controller.dart';
+import 'package:task_manager/model/task_model.dart';
+import 'package:task_manager/widget/empty_list.dart';
 import 'package:task_manager/widget/task_card.dart';
 import 'package:task_manager/widget/task_count_card.dart';
 
@@ -12,8 +14,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool haveTask = false;
+  List<TaskModel> _allTask = [];
 
-  TextEditingController searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   Future fatchTaskData() async {
     await TaskController.getTaskStatusCount();
@@ -21,15 +24,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (mounted) {
       haveTask = TaskController.taskStatusCount.isNotEmpty;
+      _allTask = TaskController.allTaskList;
       setState(() {});
     }
+  }
+
+  void _runFilter(String query) {
+    List<TaskModel> results = [];
+    if (query.isEmpty) {
+      results = TaskController.allTaskList;
+    } else {
+      results = TaskController.allTaskList.where((task) {
+        final taskTitle = task.title?.toLowerCase() ?? '';
+        final inputQuery = query.toLowerCase().trim();
+        return taskTitle.contains(inputQuery);
+      }).toList();
+    }
+
+    setState(() {
+      _allTask = results;
+    });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    searchController.dispose();
+    _searchController.dispose();
   }
 
   @override
@@ -47,36 +68,45 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            SizedBox(
-              height: haveTask ? 100 : 0,
-              child: !haveTask
-                  ? null
-                  : ListView.separated(
-                      scrollDirection: .horizontal,
-                      itemCount: TaskController.taskStatusCount.length,
+            if (_searchController.text.isEmpty && haveTask) ...[
+              SizedBox(
+                height: 100,
+                child: ListView.separated(
+                  scrollDirection: .horizontal,
+                  itemCount: TaskController.taskStatusCount.length,
 
-                      itemBuilder: (context, index) {
-                        return TaskCountCard(
-                          title: TaskController.taskStatusCount[index].sId
-                              .toString(),
-                          count: TaskController.taskStatusCount[index].sum!
-                              .toInt(),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(width: 8);
-                      },
-                    ),
-            ),
-            SizedBox(height: 5),
+                  itemBuilder: (context, index) {
+                    return TaskCountCard(
+                      title: TaskController.taskStatusCount[index].sId
+                          .toString(),
+                      count: TaskController.taskStatusCount[index].sum!.toInt(),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(width: 8);
+                  },
+                ),
+              ),
+              SizedBox(height: 5),
+            ],
 
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: TextFormField(
-                controller: searchController,
+                controller: _searchController,
+                onChanged: (value) => _runFilter(_searchController.text),
                 decoration: InputDecoration(
-                  hintText: 'Search',
+                  hintText: 'Search Task by Name..',
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.grey),
+                          onPressed: () {
+                            _searchController.clear();
+                            _runFilter('');
+                          },
+                        )
+                      : null,
                 ),
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
@@ -91,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text("My Tasks", style: TextStyle(fontWeight: .w600)),
                   Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //TODO: I have no Idea
+                    },
                     child: Text(
                       "View all",
                       style: TextStyle(color: Colors.grey),
@@ -100,17 +132,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
             SizedBox(
-              height: !haveTask ? 500 : 400,
-              child: ListView.builder(
-                itemCount: TaskController.allTaskList.length,
-                itemBuilder: ((context, index) {
-                  return TaskCard(
-                    task: TaskController.allTaskList[index],
-                    refreshParant: fatchTaskData,
-                  );
-                }),
-              ),
+              height: _searchController.text.isNotEmpty || !haveTask
+                  ? 500
+                  : 400,
+              child: _allTask.isEmpty
+                  ? EmptyList(title: "No Task Found")
+                  : ListView.builder(
+                      itemCount: _allTask.length,
+                      itemBuilder: ((context, index) {
+                        return TaskCard(
+                          task: _allTask[index],
+                          refreshParant: fatchTaskData,
+                        );
+                      }),
+                    ),
             ),
           ],
         ),

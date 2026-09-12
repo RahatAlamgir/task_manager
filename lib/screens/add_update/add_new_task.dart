@@ -32,6 +32,10 @@ class _AddNewTaskState extends State<AddNewTask> {
     print("add Task ==== ${response.responseCode}");
     if (response.isSuccess) {
       backToMain();
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(response.errorMessage.toString())));
     }
   }
 
