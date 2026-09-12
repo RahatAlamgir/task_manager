@@ -4,6 +4,7 @@ import 'package:task_manager/model/api_response.dart';
 import 'package:task_manager/model/user_model.dart';
 import 'package:task_manager/services/api_caller.dart';
 import 'package:task_manager/utils/urls.dart';
+import 'package:task_manager/widget/prefix_text_field_icon.dart';
 
 import 'package:task_manager/widget/task_app_bar.dart';
 
@@ -29,6 +30,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   TextEditingController mobileController = TextEditingController(
     text: AuthController.userData!.mobile,
   );
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String checkEmpty() {
     return '';
@@ -58,9 +60,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(response.responseData)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response.errorMessage!.toString())),
+      );
     }
   }
 
@@ -80,91 +82,117 @@ class _UpdateProfileState extends State<UpdateProfile> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              SizedBox(height: 80),
-              Text(
-                "Update Profile",
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
-              ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                SizedBox(height: 80),
+                Text(
+                  "Update Profile",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
+                ),
 
-              SizedBox(height: 15),
-              TextFormField(
-                controller: emailController,
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  prefixIcon: prefixTextFieldIcon(
-                    iconData: Icons.email_outlined,
+                SizedBox(height: 15),
+                TextFormField(
+                  controller: emailController,
+                  onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    prefixIcon: prefixTextFieldIcon(
+                      iconData: Icons.email_outlined,
+                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    ).hasMatch(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              SizedBox(height: 15),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'First Name',
-                  prefixIcon: prefixTextFieldIcon(
-                    iconData: Icons.person_outline,
+                SizedBox(height: 15),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'First Name',
+                    prefixIcon: prefixTextFieldIcon(
+                      iconData: Icons.person_outline,
+                    ),
                   ),
-                ),
-                controller: firstNameController,
+                  controller: firstNameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Name Can\'t be Empty';
+                    }
 
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
-              ),
-              SizedBox(height: 15),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Last Name',
-                  prefixIcon: prefixTextFieldIcon(
-                    iconData: Icons.person_outline,
-                  ),
+                    return null;
+                  },
+
+                  onTapOutside: (event) => FocusScope.of(context).unfocus(),
                 ),
-                controller: lastNameController,
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
-              ),
-              SizedBox(height: 15),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Mobile',
-                  prefixIcon: prefixTextFieldIcon(
-                    iconData: Icons.phone_outlined,
+                SizedBox(height: 15),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Last Name',
+                    prefixIcon: prefixTextFieldIcon(
+                      iconData: Icons.person_outline,
+                    ),
                   ),
+                  controller: lastNameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Name Can\'t be Empty';
+                    }
+
+                    return null;
+                  },
+                  onTapOutside: (event) => FocusScope.of(context).unfocus(),
                 ),
-                controller: mobileController,
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
-              ),
-              SizedBox(height: 15),
-              FilledButton(
-                onPressed: updateProfile,
-                child: Icon(Icons.arrow_circle_right_outlined, size: 22),
-              ),
-            ],
+                SizedBox(height: 15),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Mobile',
+                    prefixIcon: prefixTextFieldIcon(
+                      iconData: Icons.phone_outlined,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter your mobile number';
+                    }
+
+                    final cleanValue = value.trim();
+
+                    final phoneRegex = RegExp(r'^\+?[0-9]{10,14}$');
+
+                    if (!phoneRegex.hasMatch(cleanValue)) {
+                      return 'Please enter a valid mobile number';
+                    }
+
+                    return null; // Valid
+                  },
+                  controller: mobileController,
+                  onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                ),
+                SizedBox(height: 15),
+                FilledButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      updateProfile();
+                    }
+                  },
+                  child: Icon(Icons.arrow_circle_right_outlined, size: 22),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class prefixTextFieldIcon extends StatelessWidget {
-  const prefixTextFieldIcon({super.key, required this.iconData});
-
-  final IconData iconData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(6.0),
-        decoration: BoxDecoration(
-          color: Colors.teal.shade50,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Icon(iconData, color: Colors.teal, size: 20),
       ),
     );
   }

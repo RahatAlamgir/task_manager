@@ -8,6 +8,7 @@ import 'package:task_manager/screens/navigations/main_navigation_screen.dart';
 import 'package:task_manager/screens/profile/forget_password.dart';
 import 'package:task_manager/services/api_caller.dart';
 import 'package:task_manager/utils/urls.dart';
+import 'package:task_manager/widget/prefix_text_field_icon.dart';
 import 'package:task_manager/widget/screen_bg.dart';
 
 class LoginScreens extends StatefulWidget {
@@ -22,7 +23,8 @@ class _LoginScreensState extends State<LoginScreens> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isobscureText = true;
 
   void onTapSignUpScreen() {
     Navigator.push(
@@ -39,6 +41,7 @@ class _LoginScreensState extends State<LoginScreens> {
         "password": passwordController.text,
       },
     );
+    print("my response  ${response.isSuccess}");
     if (response.isSuccess) {
       UserModel model = UserModel.fromJson(response.responseData['data']);
       String token = response.responseData['token'];
@@ -47,6 +50,12 @@ class _LoginScreensState extends State<LoginScreens> {
         context,
         MaterialPageRoute(builder: (context) => MainNavigationScreen()),
       );
+    } else {
+      passwordController.clear();
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(response.errorMessage.toString())));
     }
   }
 
@@ -70,7 +79,7 @@ class _LoginScreensState extends State<LoginScreens> {
       child: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: Column(
             crossAxisAlignment: .start,
             children: [
@@ -84,27 +93,66 @@ class _LoginScreensState extends State<LoginScreens> {
               SizedBox(height: linegap),
               TextFormField(
                 controller: emailController,
-                decoration: InputDecoration(hintText: 'Email'),
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  prefixIcon: prefixTextFieldIcon(
+                    iconData: Icons.email_outlined,
+                  ),
+                ),
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
                 },
                 validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
                   return null;
                 },
               ),
               SizedBox(height: linegap),
               TextFormField(
                 controller: passwordController,
-                obscureText: true,
+                obscureText: isobscureText,
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
                 },
-                decoration: InputDecoration(hintText: 'Password'),
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: prefixTextFieldIcon(iconData: Icons.key_outlined),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      isobscureText = !isobscureText;
+                      setState(() {});
+                    },
+                    icon: Icon(
+                      isobscureText
+                          ? Icons.visibility_off
+                          : Icons.remove_red_eye,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 4) {
+                    return 'Password must be at least 4 characters long';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: linegap),
               FilledButton(
                 onPressed: () {
-                  onTapLogin();
+                  if (_formKey.currentState!.validate()) {
+                    onTapLogin();
+                  }
                 },
                 child: Icon(Icons.arrow_circle_right_outlined, size: 22),
               ),

@@ -24,7 +24,8 @@ class ApiCaller {
       return ApiResponse(
         responseCode: response.statusCode,
         responseData: jsonDecode(response.body),
-        isSuccess: jsonDecode(response.body),
+        isSuccess: false,
+        errorMessage: jsonDecode(response.body)['data'],
       );
     }
   }
@@ -56,7 +57,8 @@ class ApiCaller {
       return ApiResponse(
         responseCode: response.statusCode,
         responseData: jsonDecode(response.body),
-        isSuccess: jsonDecode(response.body),
+        isSuccess: false,
+        errorMessage: jsonDecode(response.body)['data'],
       );
     }
   }
