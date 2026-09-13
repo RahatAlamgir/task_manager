@@ -13,4 +13,9 @@ class Urls {
       '$baseURL/updateTaskStatus/$ID/$status';
 
   static String ProfileUpdateURL = '$baseURL/ProfileUpdate';
+  static String VerifyEmail(String email) =>
+      '$baseURL/RecoverVerifyEmail/$email';
+
+  static String VerifyOTP(String email, String otp) =>
+      '$baseURL/RecoverVerifyOtp/$email/$otp';
 }
