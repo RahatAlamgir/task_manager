@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/controller/auth_controller.dart';
 import 'package:task_manager/model/api_response.dart';
 import 'package:task_manager/services/api_caller.dart';
 import 'package:task_manager/utils/urls.dart';

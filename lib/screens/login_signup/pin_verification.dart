@@ -2,14 +2,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/widget/screen_bg.dart';
 
-class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({super.key});
+import 'package:pin_code_fields/pin_code_fields.dart';
+
+class PinVerification extends StatefulWidget {
+  const PinVerification({super.key});
 
   @override
-  State<ForgetPassword> createState() => _ForgetPasswordState();
+  State<PinVerification> createState() => _PinVerificationState();
 }
 
-class _ForgetPasswordState extends State<ForgetPassword> {
+class _PinVerificationState extends State<PinVerification> {
   double linegap = 15;
   TextEditingController emailController = TextEditingController();
 
@@ -30,7 +32,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           children: [
             SizedBox(height: 150),
             Text(
-              "Your Email Address",
+              "Pin Verification",
               style: Theme.of(
                 context,
               ).textTheme.titleLarge!.copyWith(fontWeight: .bold),
@@ -41,10 +43,23 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               style: TextStyle(color: Colors.grey),
             ),
             SizedBox(height: linegap),
-            TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(hintText: 'Email'),
+            MaterialPinField(
+              length: 6,
+              onCompleted: (pin) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Who Gave You this Pin")),
+                );
+              },
+              onChanged: (value) => print('Changed: $value'),
               onTapOutside: (event) => FocusScope.of(context).unfocus(),
+              theme: MaterialPinTheme(
+                shape: MaterialPinShape.outlined,
+                borderWidth: 0,
+                fillColor: Colors.white,
+                focusedFillColor: Colors.white,
+                cellSize: Size(48, 50),
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
 
             SizedBox(height: linegap),

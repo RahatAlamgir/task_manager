@@ -30,7 +30,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   TextEditingController mobileController = TextEditingController(
     text: AuthController.userData!.mobile,
   );
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String checkEmpty() {
     return '';

@@ -5,7 +5,7 @@ import 'package:task_manager/model/api_response.dart';
 import 'package:task_manager/model/user_model.dart';
 import 'package:task_manager/screens/login_signup/signup_screens.dart';
 import 'package:task_manager/screens/navigations/main_navigation_screen.dart';
-import 'package:task_manager/screens/profile/forget_password.dart';
+import 'package:task_manager/screens/login_signup/forget_password.dart';
 import 'package:task_manager/services/api_caller.dart';
 import 'package:task_manager/utils/urls.dart';
 import 'package:task_manager/widget/prefix_text_field_icon.dart';
